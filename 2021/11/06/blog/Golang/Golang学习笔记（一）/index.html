@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Vincil Lau的博客">
+  <meta name="author" content="Vincil Lau">
+  <meta name="keywords" content="">
+  <meta name="description" content="Golang学习笔记（一）一、Golang简介Go语言(又称Golang)是由Google开发的一种静态强类型、编译型、并发型的具有垃圾回收功能的编程语言。 二、Golang的基本语法1.名称Golang中变量、常量、类型、函数、语句标签和包的名称遵循以下规则：  以Unicode字符或下划线开头； 首个字符后面可以跟任意数量的字符、数字和下划线； 区分大小写； 不能与Golang中的关键字相同；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang学习笔记（一）">
+<meta property="og:url" content="http://vincillau.github.io/2021/11/06/blog/Golang/Golang%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Vincil Lau的博客">
+<meta property="og:description" content="Golang学习笔记（一）一、Golang简介Go语言(又称Golang)是由Google开发的一种静态强类型、编译型、并发型的具有垃圾回收功能的编程语言。 二、Golang的基本语法1.名称Golang中变量、常量、类型、函数、语句标签和包的名称遵循以下规则：  以Unicode字符或下划线开头； 首个字符后面可以跟任意数量的字符、数字和下划线； 区分大小写； 不能与Golang中的关键字相同；">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-06T08:14:23.000Z">
+<meta property="article:modified_time" content="2021-11-15T06:08:31.736Z">
+<meta property="article:author" content="Vincil Lau">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>Golang学习笔记（一） - Vincil Lau的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"vincillau.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Vincil Lau的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vincil Lau的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Golang学习笔记（一）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-11-06 16:14" pubdate>
+        2021年11月6日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.4k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Golang学习笔记（一）</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Golang学习笔记（一）"><a href="#Golang学习笔记（一）" class="headerlink" title="Golang学习笔记（一）"></a>Golang学习笔记（一）</h1><h2 id="一、Golang简介"><a href="#一、Golang简介" class="headerlink" title="一、Golang简介"></a>一、Golang简介</h2><p><code>Go语言</code>(<em>又称Golang</em>)是由<strong>Google</strong>开发的一种<strong>静态强类型</strong>、<strong>编译型</strong>、<strong>并发型</strong>的具有<strong>垃圾回收功能</strong>的<strong>编程语言</strong>。</p>
+<h2 id="二、Golang的基本语法"><a href="#二、Golang的基本语法" class="headerlink" title="二、Golang的基本语法"></a>二、Golang的基本语法</h2><h3 id="1-名称"><a href="#1-名称" class="headerlink" title="1.名称"></a>1.名称</h3><p>Golang中变量、常量、类型、函数、语句标签和包的名称遵循以下规则：</p>
+<ol>
+<li>以Unicode字符或下划线开头；</li>
+<li>首个字符后面可以跟任意数量的字符、数字和下划线；</li>
+<li>区分大小写；</li>
+<li>不能与Golang中的关键字相同；</li>
+<li>可以与内置的预声明变量、类型和函数相同，但是不建议这么做；</li>
+<li>包名本身由小写字符组成；</li>
+<li>Golang中的名称一般使用驼峰式命名，首字母缩略词通常使用相同的大小写。</li>
+</ol>
+<h3 id="2-作用域"><a href="#2-作用域" class="headerlink" title="2.作用域"></a>2.作用域</h3><ol>
+<li>在函数中声明的实体只在函数的局部有效；</li>
+<li>声明在函数外的实体对包内的所有源文件可见；</li>
+<li>如果实体的名称以大写字母开头，则它可以被包外的程序引用；如果以小写字母开头，则对包外不可见。</li>
+</ol>
+<h3 id="3-声明"><a href="#3-声明" class="headerlink" title="3.声明"></a>3.声明</h3><p>Golang中的声明主要有四种：</p>
+<ol>
+<li>变量(var)</li>
+<li>常量(const)</li>
+<li>类型(type)</li>
+<li>函数(func)</li>
+</ol>
+<p>Golang的源代码存储在一个或多个以<code>.go</code>为后缀的文件中。每个未见以<code>package</code>声明开头，表明文件属于哪一个包。后面是<code>import</code>声明，然后是包级别的类型、变量、常量、函数的声明。</p>
+<p>函数的成名包含一个名字、一个参数列表、一个可选的返回值列表以及函数体。格式为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> &lt;函数名&gt;<span class="hljs-params">(&lt;参数列表&gt;)</span> [返回值类型]</span> &#123;<br>    <span class="hljs-comment">// 函数体</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-变量"><a href="#4-变量" class="headerlink" title="4.变量"></a>4.变量</h3><p>Golang中使用<code>var</code>关键字声明变量。通用格式为：</p>
+<p>var name type = expression</p>
+<p>如果省略变量的类型，编译器会通过表达式推断变量的类型。如果省略表达式，变量将会被初始化为该类型的零值。</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">零值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数字</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">布尔值</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">字符串</td>
+<td align="center">“”</td>
+</tr>
+<tr>
+<td align="center">接口和引用类型</td>
+<td align="center">nil</td>
+</tr>
+</tbody></table>
+<p>对于像数组和结构体这样的复合类型，零值是其所有元素或成员的零值。</p>
+<p>可以声明一个变量列表并使用对应的表达式列表对其初始化。例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> i, j, k <span class="hljs-keyword">int</span><br><span class="hljs-keyword">var</span> b, f, s = <span class="hljs-literal">true</span>, <span class="hljs-number">2.3</span>, <span class="hljs-string">&quot;four&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>变量可以通过调用返回多个值的函数进行初始化：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> f, err = os.Open(name)<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-短变量声明"><a href="#1-短变量声明" class="headerlink" title="(1) 短变量声明"></a>(1) 短变量声明</h4><p>Golang中短变量声明的形式为：</p>
+<p>name:= expression</p>
+<p>编译器通过表达式推断变量的类型。</p>
+<p>可以使用短变量类型声明多个变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go">i, j := <span class="hljs-number">0</span>, <span class="hljs-number">1</span><br>f, err := os.Open(name)<br></code></pre></td></tr></table></figure>
+
+<p>短变量声明不需要声明所有在左边的变量。如果一些变量在同一个词法块中声明，则短声明的行为相当于赋值。短变量声明至少声明一个变量。</p>
+<h4 id="2-指针"><a href="#2-指针" class="headerlink" title="(2) 指针"></a>(2) 指针</h4><ol>
+<li>指针的值是一个变量的地址，所有的变量都有地址。</li>
+<li>使用取地址符(<code>&amp;</code>)可以获取变量的地址。使用<code>*</code>可以对指针进行解引用。</li>
+<li>每一个聚合类型变量都由变量组成，所以也有地址。</li>
+<li>代表变量的表达式是唯一可以应用取地址符的表达式。</li>
+<li>指针的零值是<code>nil</code>。</li>
+<li>函数可以返回局部变量的地址。</li>
+</ol>
+<h4 id="3-new函数"><a href="#3-new函数" class="headerlink" title="(3) new函数"></a>(3) new函数</h4><p><code>new函数</code>用于创建变量。表达式**new(T)**可以创建一个未命名的T类型的变量，初始化为T类型的零值并返回其地址。</p>
+<h4 id="4-变量的生命周期"><a href="#4-变量的生命周期" class="headerlink" title="(4) 变量的生命周期"></a>(4) 变量的生命周期</h4><p>包级别变量的声明周期是整个程序的执行时间。局部变量在每次执行声明语句是时创建一个新的变量，该变量一直生存到它变得不可访问。变量在堆或栈上是由编译器来决定的，不是有var或new决定的。</p>
+<h3 id="4-赋值"><a href="#4-赋值" class="headerlink" title="4.赋值"></a>4.赋值</h3><h4 id="1-多重赋值"><a href="#1-多重赋值" class="headerlink" title="(1) 多重赋值"></a>(1) 多重赋值</h4><p>使用多重赋值可以一次性赋值多个变量。在赋值前<code>=</code>右侧的所有表达式都会被计算。可以将不需要的值付给空标识符：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go">_, err = io.Copy(dst, src)<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-类型声明"><a href="#5-类型声明" class="headerlink" title="5.类型声明"></a>5.类型声明</h3><p>使用type声明可以定义一个新的命名类型，它与某个已有的类型使用相同的底层类型。通用格式为：</p>
+<p>type name underlying-type</p>
+<h2 id="三、Golang中的基本数据类型"><a href="#三、Golang中的基本数据类型" class="headerlink" title="三、Golang中的基本数据类型"></a>三、Golang中的基本数据类型</h2><p>Golang的数据类型分为四大类：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型分类</th>
+<th align="center">类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">基本类型</td>
+<td align="center">数字、字符串、布尔型</td>
+</tr>
+<tr>
+<td align="center">聚合类型</td>
+<td align="center">数组、结构体</td>
+</tr>
+<tr>
+<td align="center">引用类型</td>
+<td align="center">指针、slice、map、函数、通道</td>
+</tr>
+<tr>
+<td align="center">接口类型</td>
+<td align="center">接口</td>
+</tr>
+</tbody></table>
+<h3 id="1-整数"><a href="#1-整数" class="headerlink" title="1.整数"></a>1.整数</h3><p>Golang同时具有有符号整数和无符号整数。</p>
+<p>有符号整数：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">int8</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">int16</td>
+<td align="center">16</td>
+</tr>
+<tr>
+<td align="center">int32</td>
+<td align="center">32</td>
+</tr>
+<tr>
+<td align="center">int64</td>
+<td align="center">64</td>
+</tr>
+</tbody></table>
+<p>无符号整数：</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">uint8</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td align="center">uint16</td>
+<td align="center">16</td>
+</tr>
+<tr>
+<td align="center">uint32</td>
+<td align="center">32</td>
+</tr>
+<tr>
+<td align="center">uint64</td>
+<td align="center">64</td>
+</tr>
+</tbody></table>
+<p>除了上述8种类型外，Golang中还有<code>int</code>和<code>uint</code>两种类型，它们与原生的有\无符号整数相同，或者在该平台上的运算效率最高。</p>
+<p><code>rune</code>类型是int32的同义词，常常用于表示Unicode码点。<code>byte</code>类型是uint8的同义词。</p>
+<p>无符号整数类型<code>uintptr</code>的大小不明确，但是足以存放指针。</p>
+<p>n位有符号整数的表示范围是-2^(n-1)<del>2^(n-1)-1。n位无符号类型的表示范围是0</del>2^n-1。</p>
+<p>Golang中的二元运算符按优先级降序排序如下：</p>
+<p><code>*</code>, <code>/</code>, <code>%</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, <code>&amp;</code>, <code>&amp;^</code><br><code>+</code>, <code>-</code>, <code>|</code>, <code>^</code><br><code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code><br><code>&amp;&amp;</code><br><code>||</code></p>
+<h3 id="2-浮点数"><a href="#2-浮点数" class="headerlink" title="2.浮点数"></a>2.浮点数</h3><p>Golang中有两种大小的浮点数float32和float64。</p>
+<p>math包中的的MaxFloat32是float32的最大值。math.MaxFloat64是float64的最大值。最小值类似。</p>
+<p>math.IsNaN用于判断参数是否是非数值。</p>
+<h3 id="3-复数"><a href="#3-复数" class="headerlink" title="3.复数"></a>3.复数</h3><p>Golang中的复数类型为complex64和complex128，分别由float32和float64组成。内置函数complex可用于创建复数，real函数和imag函数可用于提取复数的实部和虚部：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> x <span class="hljs-keyword">complex128</span> = <span class="hljs-built_in">complex</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>fmt.Println(<span class="hljs-built_in">real</span>(x))<br>fmt.Println(<span class="hljs-built_in">imag</span>(x))<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-布尔值"><a href="#4-布尔值" class="headerlink" title="4.布尔值"></a>4.布尔值</h3><p><code>bool型</code>的值只有两种可能：true和false。<code>!</code>表示取反。<code>&amp;&amp;</code>和<code>||</code>分别表示与运算和或运算，它们都有可能引起短路行为，&amp;&amp;的优先级比||高。bool类型与数值类型不能隐式转换。</p>
+<h3 id="5-字符串"><a href="#5-字符串" class="headerlink" title="5.字符串"></a>5.字符串</h3><p>在Golang中，字符串是不可变的字符序列，可以包含任意数据。len函数可以获取字符串的字节数。</p>
+<p>子串生成操作<code>s[i:j]</code>产生新的字符串。例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">var</span> str <span class="hljs-keyword">string</span> = <span class="hljs-string">&quot;hello world&quot;</span><br>fmt.Println(str[<span class="hljs-number">0</span>:<span class="hljs-number">5</span>])<br></code></pre></td></tr></table></figure>
+
+<p>可以使用<code>+</code>连接两个字符串生成一个新的字符串。</p>
+<p>字符串本身可以做比较，比较按字节进行，符合字典排序。</p>
+<h4 id="1-字符串字面量"><a href="#1-字符串字面量" class="headerlink" title="(1) 字符串字面量"></a>(1) 字符串字面量</h4><p>使用带双引号的字节序列表示字符串字面量。一般字符串按utf-8进行编码。字符串中可以有转义序列，以<code>\</code>开始：</p>
+<table>
+<thead>
+<tr>
+<th align="center">转义序列</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">\a</td>
+<td align="center">警告或响铃</td>
+</tr>
+<tr>
+<td align="center">\b</td>
+<td align="center">退格</td>
+</tr>
+<tr>
+<td align="center">\f</td>
+<td align="center">换页</td>
+</tr>
+<tr>
+<td align="center">\n</td>
+<td align="center">换行</td>
+</tr>
+<tr>
+<td align="center">\r</td>
+<td align="center">回车</td>
+</tr>
+<tr>
+<td align="center">\t</td>
+<td align="center">水平制表符</td>
+</tr>
+<tr>
+<td align="center">\v</td>
+<td align="center">垂直制表符</td>
+</tr>
+<tr>
+<td align="center">&#39;</td>
+<td align="center">单引号</td>
+</tr>
+<tr>
+<td align="center">&quot;</td>
+<td align="center">双引号</td>
+</tr>
+<tr>
+<td align="center">\</td>
+<td align="center">反斜杠</td>
+</tr>
+<tr>
+<td align="center">\xhh</td>
+<td align="center">十六进制字节</td>
+</tr>
+<tr>
+<td align="center">\ooo</td>
+<td align="center">八进制字节</td>
+</tr>
+<tr>
+<td align="center">\uhhhh</td>
+<td align="center">16位码点</td>
+</tr>
+<tr>
+<td align="center">\uhhhhhhhh</td>
+<td align="center">32位码点</td>
+</tr>
+</tbody></table>
+<p>使用反引号表示原生的字符串字面量，转义序列不起作用。</p>
+<h4 id="2-字符串和字节slice"><a href="#2-字符串和字节slice" class="headerlink" title="(2) 字符串和字节slice"></a>(2) 字符串和字节slice</h4><p><code>bytes</code>、<code>strings</code>、<code>strconv</code>、<code>unicode</code>4个标准包用于支持对字符串的操作。</p>
+<p>strings包提供了用于搜索、替换、比较、修整、切分和连接字符串的函数。</p>
+<p>bytes包中具有用于操作字节slice的函数。</p>
+<p>strconv包提供了转换布尔值、整数、浮点数为与之对应的字符串形式以及进行相反操作的函数。</p>
+<p>unicode包提供了用于判别文字符号值的特性的函数。</p>
+<h3 id="6-常量"><a href="#6-常量" class="headerlink" title="6.常量"></a>6.常量</h3><p>Golang中使用<code>const</code>声明常量，例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> pi = <span class="hljs-number">3.14</span><br></code></pre></td></tr></table></figure>
+
+<p>可以指定常量的类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> pi <span class="hljs-keyword">float64</span> = <span class="hljs-number">3.14</span><br></code></pre></td></tr></table></figure>
+
+<p>可以同时声明多个常量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">const</span> (<br>	e = <span class="hljs-number">2.718</span><br>    pi = <span class="hljs-number">3.14</span><br>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-常量生成器iota"><a href="#1-常量生成器iota" class="headerlink" title="(1) 常量生成器iota"></a>(1) 常量生成器iota</h4><p>iota创建一系列相关值，而不是逐个值显式写出。常量声明中，iota从0开始取值，逐项加一，例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Weekday <span class="hljs-keyword">int</span><br><br><span class="hljs-keyword">const</span> (<br>	Sunday Weekday = itoa<br>    Monday<br>    Tuesday<br>    Wednesday<br>    Thursday<br>    Friday<br>    Saturday<br>)<br></code></pre></td></tr></table></figure>
+
+<p>更复杂的表达式也可以使用iota</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Flags <span class="hljs-keyword">uint</span><br><br><span class="hljs-keyword">const</span> (<br>	FlagUp Flags = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-literal">iota</span><br>    FlagBroadcast<br>    FlagLoopback<br>    FlagPointToPoint<br>    FlagMuticast<br>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>《Go程序设计语言》</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Go">Go —— 维基百科</a></li>
+<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/golang/">Go语言入门教程</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Golang/">Golang</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Golang/">Golang</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/01/15/blog/Asm/8086%E5%AF%84%E5%AD%98%E5%99%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">8086CPU寄存器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/23/blog/Database/LevelDB-Arena%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+                        <span class="hidden-mobile">LevelDB Arena源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

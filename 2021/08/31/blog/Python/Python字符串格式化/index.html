@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Vincil Lau的博客">
+  <meta name="author" content="Vincil Lau">
+  <meta name="keywords" content="">
+  <meta name="description" content="Python字符串格式化引言字符串格式化是我们在使用Python中经常用到的功能。Python为我们提供了四种格式化字符串的方法，分别是%运算符、字符串format方法、格式化字符串字面值以及模板字符串。 %运算符%运算符提供了一种printf风格的字符串格式化，它的用法跟C语言中的printf十分相似。先来看一个例子： 12s &#x3D; &quot;我叫%s, 今年%d岁。&quot; % (&amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python字符串格式化">
+<meta property="og:url" content="http://vincillau.github.io/2021/08/31/blog/Python/Python%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%A0%BC%E5%BC%8F%E5%8C%96/index.html">
+<meta property="og:site_name" content="Vincil Lau的博客">
+<meta property="og:description" content="Python字符串格式化引言字符串格式化是我们在使用Python中经常用到的功能。Python为我们提供了四种格式化字符串的方法，分别是%运算符、字符串format方法、格式化字符串字面值以及模板字符串。 %运算符%运算符提供了一种printf风格的字符串格式化，它的用法跟C语言中的printf十分相似。先来看一个例子： 12s &#x3D; &quot;我叫%s, 今年%d岁。&quot; % (&amp;quo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-31T06:21:19.000Z">
+<meta property="article:modified_time" content="2021-11-15T06:12:10.766Z">
+<meta property="article:author" content="Vincil Lau">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="字符串">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>Python字符串格式化 - Vincil Lau的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"vincillau.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Vincil Lau的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vincil Lau的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Python字符串格式化">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-31 14:21" pubdate>
+        2021年8月31日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python字符串格式化</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Python字符串格式化"><a href="#Python字符串格式化" class="headerlink" title="Python字符串格式化"></a>Python字符串格式化</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><code>字符串格式化</code>是我们在使用<strong>Python</strong>中经常用到的功能。Python为我们提供了<strong>四种</strong>格式化字符串的方法，分别是<code>%运算符</code>、<code>字符串format方法</code>、<code>格式化字符串字面值</code>以及<code>模板字符串</code>。</p>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="%运算符"></a>%运算符</h2><p><code>%运算符</code>提供了一种<em>printf风格的字符串格式化</em>，它的用法跟C语言中的<strong>printf</strong>十分相似。先来看一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;我叫%s, 今年%d岁。&quot;</span> % (<span class="hljs-string">&quot;小明&quot;</span>, <span class="hljs-number">18</span>) <span class="hljs-comment"># 我叫小明, 今年18岁。</span><br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>使用%运算符格式化字符串的语法是<code>format % values</code>。<code>format</code>是一个<strong>字符串</strong>，values可以是一个<strong>对象</strong>、<strong>元组</strong>或<strong>字典</strong>，format中会有若干个’%’开头的<code>标记转换符</code>，例如“%d”代表一个整数，“%s”代表一个字符串，这些标记转换符会被values中的条目替换。</p>
+<p>当<strong>value</strong>是一个元组时，需要每个转换符与value中的条目<strong>一一对应</strong>，可以为标记转换符添加<strong>映射键</strong>,value的类型应为字典。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;我叫%(name)s, 今年%(age)d岁。&quot;</span> % &#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;小明&quot;</span>, <span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-number">18</span>&#125;<br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>转换标记符包含两个或更多字符并具有以下组成，且必须遵循此处规定的顺序：</p>
+<blockquote>
+<ol>
+<li>‘%’ 字符，用于标记转换符的起始。</li>
+<li>映射键（可选），由加圆括号的字符序列组成 (例如 (somename))。</li>
+<li>转换旗标（可选），用于影响某些转换类型的结果。</li>
+<li>最小字段宽度（可选）。 如果指定为 ‘*’ (星号)，则实际宽度会从 values 元组的下一元素中读取，要转换的对象则为最小字段宽度和可选的精度之后的元素。</li>
+<li>精度（可选），以在 ‘.’ (点号) 之后加精度值的形式给出。 如果指定为 ‘*’ (星号)，则实际精度会从 values 元组的下一元素中读取，要转换的对象则为精度之后的元素。</li>
+<li>长度修饰符（可选）。</li>
+<li>转换类型。</li>
+</ol>
+</blockquote>
+<p>以下是转换符列表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">转换符</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">‘d’</td>
+<td align="center">有符号十进制整数。</td>
+</tr>
+<tr>
+<td align="center">‘i’</td>
+<td align="center">有符号十进制整数。</td>
+</tr>
+<tr>
+<td align="center">‘o’</td>
+<td align="center">有符号八进制数。</td>
+</tr>
+<tr>
+<td align="center">‘u’</td>
+<td align="center">过时类型 – 等价于 ‘d’。</td>
+</tr>
+<tr>
+<td align="center">‘x’</td>
+<td align="center">有符号十六进制数（小写）。</td>
+</tr>
+<tr>
+<td align="center">‘X’</td>
+<td align="center">有符号十六进制数（大写）。</td>
+</tr>
+<tr>
+<td align="center">‘e’</td>
+<td align="center">浮点指数格式（小写）。</td>
+</tr>
+<tr>
+<td align="center">‘E’</td>
+<td align="center">浮点指数格式（大写）。</td>
+</tr>
+<tr>
+<td align="center">‘f’</td>
+<td align="center">浮点十进制格式。</td>
+</tr>
+<tr>
+<td align="center">‘F’</td>
+<td align="center">浮点十进制格式。</td>
+</tr>
+<tr>
+<td align="center">‘g’</td>
+<td align="center">浮点格式。 如果指数小于 -4 或不小于精度则使用小写指数格式，否则使用十进制格式。</td>
+</tr>
+<tr>
+<td align="center">‘G’</td>
+<td align="center">浮点格式。 如果指数小于 -4 或不小于精度则使用大写指数格式，否则使用十进制格式。</td>
+</tr>
+<tr>
+<td align="center">‘c’</td>
+<td align="center">单个字符（接受整数或单个字符的字符串）。</td>
+</tr>
+<tr>
+<td align="center">‘r’</td>
+<td align="center">字符串（使用 repr() 转换任何 Python 对象）。</td>
+</tr>
+<tr>
+<td align="center">‘s’</td>
+<td align="center">字符串（使用 str() 转换任何 Python 对象）。</td>
+</tr>
+<tr>
+<td align="center">‘a’</td>
+<td align="center">字符串（使用 ascii() 转换任何 Python 对象）。</td>
+</tr>
+<tr>
+<td align="center">‘%’</td>
+<td align="center">不转换参数，在结果中输出一个 ‘%’ 字符。</td>
+</tr>
+</tbody></table>
+<p>转换标志列表：</p>
+<table>
+<thead>
+<tr>
+<th align="center">标志</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">‘#’</td>
+<td align="center">值的转换将使用“替代形式”（具体定义见下文）。</td>
+</tr>
+<tr>
+<td align="center">‘0’</td>
+<td align="center">转换将为数字值填充零字符。</td>
+</tr>
+<tr>
+<td align="center">‘-‘</td>
+<td align="center">转换值将靠左对齐（如果同时给出 ‘0’ 转换，则会覆盖后者）。</td>
+</tr>
+<tr>
+<td align="center">‘ ‘</td>
+<td align="center">(空格) 符号位转换产生的正数（或空字符串）前将留出一个空格。</td>
+</tr>
+<tr>
+<td align="center">‘+’</td>
+<td align="center">符号字符 (‘+’ 或 ‘-‘) 将显示于转换结果的开头（会覆盖 “空格” 旗标）。</td>
+</tr>
+</tbody></table>
+<p>Python官方文档并不建议我们使用这种方法，因为这种方法不仅需要标识转换符与value一一对应，而且还不能正确格式化<strong>元组</strong>，<strong>列表</strong>等类型。所以，在Python中使用格式化字符串建议使用以下三种方法。</p>
+<h2 id="字符串format方法"><a href="#字符串format方法" class="headerlink" title="字符串format方法"></a>字符串format方法</h2><p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;&#123;&#125; + &#123;&#125; = &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) <span class="hljs-comment"># 1 + 2 = 3</span><br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p><code>format</code>会将参数依次替换字符串中的<code>&#123;&#125;</code>并返回一个新的str对象。如果需要输出<code>&#123;&#125;</code>需要用两层花括号(<code>&#123;&#123;&#125;&#125;</code>)</p>
+<p>“{}”可以具有位置参数，format方法将会用指定位置的参数代替花括号。如果使用位置参数，那么所有的花括号中都必须有位置参数。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;&#123;1&#125; + &#123;0&#125; = &#123;2&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>“{}”中还可以具有<code>关键字参数</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;我叫&#123;name&#125;, 今年&#123;age&#125;岁。&quot;</span>.<span class="hljs-built_in">format</span>(name=<span class="hljs-string">&quot;小明&quot;</span>, age=<span class="hljs-number">18</span>)<br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>位置参数和关键字参数可以混用。</p>
+<p>可以使用<code>**</code>传递字典作为关键字参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">table = &#123;<span class="hljs-string">&#x27;Sjoerd&#x27;</span>: <span class="hljs-number">4127</span>, <span class="hljs-string">&#x27;Jack&#x27;</span>: <span class="hljs-number">4098</span>, <span class="hljs-string">&#x27;Dcab&#x27;</span>: <span class="hljs-number">8637678</span>&#125;<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Jack: &#123;Jack:d&#125;; Sjoerd: &#123;Sjoerd:d&#125;; Dcab: &#123;Dcab:d&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(**table))<br><span class="hljs-comment"># Jack: 4098; Sjoerd: 4127; Dcab: 8637678</span><br></code></pre></td></tr></table></figure>
+
+<p>还可以在花括号中添加格式化参数，详见<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/string.html#formatstrings">格式字符串语法</a>。</p>
+<h2 id="格式化字符串字面值"><a href="#格式化字符串字面值" class="headerlink" title="格式化字符串字面值"></a>格式化字符串字面值</h2><p>Python3.6新增加了<code>格式化字符串字面值</code>的特性，可以方便的格式化字符串。</p>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">name = <span class="hljs-string">&quot;小明&quot;</span><br>age = <span class="hljs-number">18</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;我叫<span class="hljs-subst">&#123;name&#125;</span>, 今年<span class="hljs-subst">&#123;age&#125;</span>岁。&quot;</span>)<br><span class="hljs-comment"># 我叫小明, 今年18岁。</span><br></code></pre></td></tr></table></figure>
+
+<p>当我们在一个字符串前标注一个<code>&#39;f&#39;</code>或<code>&#39;F&#39;</code>时，Python解释器就认为这个字符串是一个<strong>格式化字符串字面值</strong>。在这个字符串中使用“{}”将一个变量或表达式括起来，Python就会用变量或表达式的内容替换“{}”。格式化字符串字面值还可以使用<strong>格式说明符</strong>，用法与str.format相同：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">price = <span class="hljs-number">12.567</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;苹果的价格是<span class="hljs-subst">&#123;price:<span class="hljs-number">.2</span>f&#125;</span>&quot;</span>) <span class="hljs-comment"># 苹果的价格是12.57</span><br></code></pre></td></tr></table></figure>
+
+<p>转换符<code>!s</code>、<code>!r</code>、<code>!a</code>分别调用<code>str</code>、<code>repr</code>、<code>ascii</code>对表达式进行求值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Student</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, name: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;小明&quot;</span>, age: <span class="hljs-built_in">int</span> = <span class="hljs-number">18</span></span>):</span><br>        self.name: <span class="hljs-built_in">str</span> = name<br>        self.age: <span class="hljs-built_in">int</span> = age<br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__str__</span>(<span class="hljs-params">self</span>):</span><br>        <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">&quot; &quot;</span> + <span class="hljs-built_in">str</span>(self.age) + <span class="hljs-string">&quot; __str__&quot;</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__repr__</span>(<span class="hljs-params">self</span>):</span><br>        <span class="hljs-keyword">return</span> self.name + <span class="hljs-string">&quot; &quot;</span> + <span class="hljs-built_in">str</span>(self.age) + <span class="hljs-string">&quot; __repr__&quot;</span><br><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;Student()!s&#125;</span>\n<span class="hljs-subst">&#123;Student()!r&#125;</span>\n<span class="hljs-subst">&#123;Student()!a&#125;</span>&quot;</span>)<br><span class="hljs-comment"># 小明 18 __str__</span><br><span class="hljs-comment"># 小明 18 __repr__</span><br><span class="hljs-comment"># \u5c0f\u660e 18 __repr__</span><br></code></pre></td></tr></table></figure>
+
+<p>格式表达式中不能有反斜杠，否则会报错。即便未包含表达式，格式字符串字面值也不能用作文档字符串。</p>
+<h2 id="模板字符串"><a href="#模板字符串" class="headerlink" title="模板字符串"></a>模板字符串</h2><p>Python提供的<code>Template类</code>也可以用来格式化字符串，它位于<strong>string</strong>包。使用Template类时，实现实例化一个Template对象。然后调用<code>substitute</code>或<code>safe_substitute</code>用传入的参数替换模板字符串中的变量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">t = Template(<span class="hljs-string">&quot;我叫$name, 今年$age岁。&quot;</span>)<br>s = t.substitute(name=<span class="hljs-string">&quot;小明&quot;</span>, age=<span class="hljs-number">18</span>)<br><span class="hljs-built_in">print</span>(s)<br>s = t.substitute(&#123;<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;小明&quot;</span>, <span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-number">18</span>&#125;)<br><span class="hljs-built_in">print</span>(s)<br></code></pre></td></tr></table></figure>
+
+<p>$identifier为替换占位符，它会匹配一个名为 “identifier” 的映射键。如果映射键有歧义可以使用花括号区分。否则Python将匹配尽可能多的字符：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(Template(<span class="hljs-string">&quot;$ab&quot;</span>).substitute(a=<span class="hljs-number">1</span>, ab=<span class="hljs-number">2</span>))  <span class="hljs-comment"># 2</span><br><span class="hljs-built_in">print</span>(Template(<span class="hljs-string">&quot;$&#123;a&#125;b&quot;</span>).substitute(a=<span class="hljs-number">1</span>, ab=<span class="hljs-number">2</span>))  <span class="hljs-comment"># 1b</span><br><span class="hljs-built_in">print</span>(Template(<span class="hljs-string">&quot;$&#123;ab&#125;&quot;</span>).substitute(a=<span class="hljs-number">1</span>, ab=<span class="hljs-number">2</span>))  <span class="hljs-comment"># 2</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>substitute</strong>或<strong>safe_substitute</strong>可以接受关键字参数或者字典。这两个方法的区别在于，模板字符串中的一个标识符在传入方法的参数中没有条目与之对应时，substatute会抛出<code>ValueError</code>，而safe_substitute会保留$和标识符而不进行替换。</p>
+<p>想要在字符串中保留<code>$</code>可以用<code>$$</code>转义。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27825451/article/details/105652244">python字符串格式化深入详解（四种方法）</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/stdtypes.html#printf-style-string-formatting">printf 风格的字符串格式化</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/string.html">string — 常见的字符串操作</a></p>
+</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Python/">Python</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Python/">Python</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">字符串</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/09/16/blog/Python/Python%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%AE%9E%E7%8E%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python迭代器实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/26/blog/Linux/%E6%B5%85%E8%B0%88Unix%E5%9F%9F%E5%A5%97%E6%8E%A5%E5%AD%97/">
+                        <span class="hidden-mobile">浅谈Unix域套接字</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

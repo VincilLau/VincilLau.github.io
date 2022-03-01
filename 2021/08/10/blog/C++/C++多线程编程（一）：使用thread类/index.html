@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Vincil Lau的博客">
+  <meta name="author" content="Vincil Lau">
+  <meta name="keywords" content="">
+  <meta name="description" content="C++多线程编程（一）：使用thread类千呼万唤始出来！在C++11这一核弹级更新中加入了对多线程编程的支持，从此程序猿们就可以在不借助Boost等第三方库（或者自己造轮子）情况下方便地编写跨平台的多线程程序。我将在《C++多线程编程》这一系列博客中介绍C++11中多线程编程的相关知识。让我们先从thread类开始。 thread类的功能thread类是C++中表示执行线程的类，位于头文件&amp;lt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++多线程编程（一）：使用thread类">
+<meta property="og:url" content="http://vincillau.github.io/2021/08/10/blog/C++/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E4%BD%BF%E7%94%A8thread%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Vincil Lau的博客">
+<meta property="og:description" content="C++多线程编程（一）：使用thread类千呼万唤始出来！在C++11这一核弹级更新中加入了对多线程编程的支持，从此程序猿们就可以在不借助Boost等第三方库（或者自己造轮子）情况下方便地编写跨平台的多线程程序。我将在《C++多线程编程》这一系列博客中介绍C++11中多线程编程的相关知识。让我们先从thread类开始。 thread类的功能thread类是C++中表示执行线程的类，位于头文件&amp;lt">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-10T07:25:11.000Z">
+<meta property="article:modified_time" content="2021-11-15T06:11:11.616Z">
+<meta property="article:author" content="Vincil Lau">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="线程">
+<meta property="article:tag" content="并发编程">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>C++多线程编程（一）：使用thread类 - Vincil Lau的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"vincillau.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Vincil Lau的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vincil Lau的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="C++多线程编程（一）：使用thread类">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-10 15:25" pubdate>
+        2021年8月10日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++多线程编程（一）：使用thread类</h1>
+            
+            <div class="markdown-body">
+              <h1 id="C-多线程编程（一）：使用thread类"><a href="#C-多线程编程（一）：使用thread类" class="headerlink" title="C++多线程编程（一）：使用thread类"></a>C++多线程编程（一）：使用thread类</h1><p>千呼万唤始出来！在C++11这一核弹级更新中加入了对多线程编程的支持，从此程序猿们就可以在不借助Boost等第三方库（<em>或者自己造轮子</em>）情况下方便地编写跨平台的多线程程序。我将在<code>《C++多线程编程》</code>这一系列博客中介绍C++11中多线程编程的相关知识。让我们先从thread类开始。</p>
+<h2 id="thread类的功能"><a href="#thread类的功能" class="headerlink" title="thread类的功能"></a>thread类的功能</h2><p><code>thread类</code>是C++中表示<code>执行线程</code>的类，位于头文件<code>&lt;thread&gt;</code>中。我们创建一个thread对象就会立即执行一个对应的线程。通过thread类的成员函数，我们可以标识线程或对线程进行控制。</p>
+<h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><h3 id="启动线程"><a href="#启动线程" class="headerlink" title="启动线程"></a>启动线程</h3><p>我们构造一个thread类的对象，就会立即执行一个与该thread对象对应的线程。通常我们会向thread类的构造函数传递一个<code>可调用对象</code>，新创建的线程就会执行这个可调用对象。<strong>可调用对象</strong>可以是<code>函数</code>、<code>函数指针</code>、<code>lambda表达式</code>或<code>function对象</code>。</p>
+<p><strong>栗子：</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;functional&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;thread&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; <span class="hljs-string">&quot;hello world&quot;</span> &lt;&lt; endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in"><span class="hljs-keyword">void</span></span> (*func_ptr)(<span class="hljs-keyword">void</span>) = func;<br>    function&lt;<span class="hljs-built_in"><span class="hljs-keyword">void</span></span>(<span class="hljs-keyword">void</span>)&gt; func_obj = func;<br><br>    <span class="hljs-function">thread <span class="hljs-title">t1</span><span class="hljs-params">(func)</span></span>;<br>    <span class="hljs-function">thread <span class="hljs-title">t2</span><span class="hljs-params">(func_ptr)</span></span>;<br>    <span class="hljs-function">thread <span class="hljs-title">t3</span><span class="hljs-params">(func_obj)</span></span>;<br>    <span class="hljs-function">thread <span class="hljs-title">t4</span><span class="hljs-params">([]</span></span><br><span class="hljs-params"><span class="hljs-function">              &#123; cout &lt;&lt; <span class="hljs-string">&quot;hello world&quot;</span> &lt;&lt; endl; &#125;)</span></span>;<br><br>    t1.<span class="hljs-built_in">join</span>();<br>    t2.<span class="hljs-built_in">join</span>();<br>    t3.<span class="hljs-built_in">join</span>();<br>    t4.<span class="hljs-built_in">join</span>();<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在上面的例子中，我们分别向thread类的构造函数传递了<strong>函数</strong>、<strong>函数指针</strong>、<strong>function对象</strong>和<strong>lambda表达式</strong>。创建出的四个线程都是向标准输出中输出**”hello world”**。那么thread对象的join成员函数是干什么呢？我将在“连接线程”这一节中向大家介绍。</p>
+<h3 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h3><p>既然thread类的构造函数可以接受一个可调用对象，那么可不可以想这个可调用参数<code>传递参数</code>呢？当然可以！如果我们想要想可调用对象传递参数，只需要将参数和可调用对象一并放入thread类的构造函数的参数列表中即可：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;functional&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;thread&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n1, <span class="hljs-keyword">int</span> n2)</span></span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; n1 &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; n2 &lt;&lt; <span class="hljs-string">&quot; = &quot;</span> &lt;&lt; n1 + n2 &lt;&lt; endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-function">thread <span class="hljs-title">t1</span><span class="hljs-params">(add, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)</span></span>;<br>    <span class="hljs-function">thread <span class="hljs-title">t2</span><span class="hljs-params">([](<span class="hljs-keyword">int</span> n1, <span class="hljs-keyword">int</span> n2)</span></span><br><span class="hljs-params"><span class="hljs-function">              &#123; cout &lt;&lt; n1 &lt;&lt; <span class="hljs-string">&quot; + &quot;</span> &lt;&lt; n2 &lt;&lt; <span class="hljs-string">&quot; = &quot;</span> &lt;&lt; n1 + n2 &lt;&lt; endl; &#125;,</span></span><br><span class="hljs-params"><span class="hljs-function">              <span class="hljs-number">5</span>, <span class="hljs-number">6</span>)</span></span>;<br><br>    t1.<span class="hljs-built_in">join</span>();<br>    t2.<span class="hljs-built_in">join</span>();<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在以上的例子中，我们向thread类传入可调用对象和两个参数，可调用对象在执行时输出两个参数的和。</p>
+<p>thread类的构造函数可以接受任意多的额外的参数，只需要传入的参数与可调用对象的参数列表一一对应即可。</p>
+<h2 id="连接线程与分离线程"><a href="#连接线程与分离线程" class="headerlink" title="连接线程与分离线程"></a>连接线程与分离线程</h2><h3 id="连接线程"><a href="#连接线程" class="headerlink" title="连接线程"></a>连接线程</h3><p>在上一节的两个例子中，我们均调用了thread对象的<code>join成员函数</code>。join成员函数的作用是<code>等待线程完成</code>。请读者试想一下，假如我们在main函数中创建了一个线程对象A，线程A在被创建之后执行了一个非常耗时的任务。而main函数(<em>主线程</em>)在创建完线程A后执行return 0，整个进程就会被终止，此时线程A即使没有执行完成也会被终止，程序的只想结果往往就不是我们所期望的了。所以我们需要在主线程中调用join成员函数来等线程执行完成，这个操作也叫<code>连接线程</code>。当我们调用join时，如果线程尚未执行完成，就对阻塞调用join的线程直至线程执行完成。若干在调用join时线程已经执行完成，则join会立即返回，不会阻塞调用线程。</p>
+<h3 id="分离线程"><a href="#分离线程" class="headerlink" title="分离线程"></a>分离线程</h3><p>如果我们不需要等待线程完成，可以调用thread对象的<code>detach</code>成员函数分离线程，之后这个线程就可以独立运行，不需要我们调用join等待它执行完成。分离线程通常用于执行一些后台任务的线程。</p>
+<h3 id="可连接线程与不可连接线程"><a href="#可连接线程与不可连接线程" class="headerlink" title="可连接线程与不可连接线程"></a>可连接线程与不可连接线程</h3><p>如果一个thread对象是符合以下任意一种情况，它将是不可连接的：</p>
+<blockquote>
+<ol>
+<li>默认构造的thread对象。</li>
+<li>该thread对象已经被移动到另一个thread对象。</li>
+<li>thread对象已经被连接或分离。</li>
+</ol>
+</blockquote>
+<p>不能对不可连接的线程对象调用join。</p>
+<h3 id="线程与thread类析构函数"><a href="#线程与thread类析构函数" class="headerlink" title="线程与thread类析构函数"></a>线程与thread类析构函数</h3><p>当一个thread对象被析构时，如果该thread对象对应的线程还没有执行完成，线程<code>仍然会继续执行</code>，不会因为thread对象被析构而停止执行。</p>
+<p>如果一个线程是可连接的，则必须在thread对象被析构前调用join，否则析构函数会调用<code>std::terminate</code>终止程序。</p>
+<h2 id="线程标识"><a href="#线程标识" class="headerlink" title="线程标识"></a>线程标识</h2><h3 id="thread-id类"><a href="#thread-id类" class="headerlink" title="thread::id类"></a>thread::id类</h3><p>在C++中用<code>thread::id类</code>来标识线程。对于<code>可连接线程</code>，可以通过<code>get_id</code>成员函数获得标识该thread对象的thread::id对象，每个thread对象的id唯一。对于<code>不可连接线程</code>，调用get_id会返回<code>默认构造的thread_id对象</code>，所有不可连接线程的id相等。</p>
+<p>thread::id类重载了一下运算符用于thread::id对象的相等性比较：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>== (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>!= (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>&lt; (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>&lt;= (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>&gt; (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br><span class="hljs-keyword">bool</span> <span class="hljs-keyword">operator</span>&gt;= (thread::id lhs, thread::id rhs) <span class="hljs-keyword">noexcept</span>;<br></code></pre></td></tr></table></figure>
+
+<p>thread::id还重载了<code>&lt;&lt;运算符</code>用于向输出流中输出thread::id：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">charT</span>, <span class="hljs-keyword">class</span> <span class="hljs-title">traits</span>&gt;</span><br>basic_ostream&lt;chasrT, traits&gt;&amp; <span class="hljs-keyword">operator</span>&lt;&lt; (basic_ostream&lt;charT,traits&gt;&amp; os, thread::id id);<br></code></pre></td></tr></table></figure>
+
+<h3 id="获取当前线程的thread-id"><a href="#获取当前线程的thread-id" class="headerlink" title="获取当前线程的thread::id"></a>获取当前线程的thread::id</h3><p>通过调用<code>命名空间this_thread</code>中的<code>静态函数get_id</code>可以获得当前线程的线程id。</p>
+<h3 id="获取原生线程句柄"><a href="#获取原生线程句柄" class="headerlink" title="获取原生线程句柄"></a>获取原生线程句柄</h3><p>通过调用thread对象的<code>native_handle</code>成员函数可以获得平台相关的原生线程句柄，原生线程句柄类型<code>thread::native_handle_type</code>与实现有关，可能会影响程序的可移植性，不建议在一般情况下使用。</p>
+<h2 id="转移线程对象的所有权"><a href="#转移线程对象的所有权" class="headerlink" title="转移线程对象的所有权"></a>转移线程对象的所有权</h2><p>thread类的<code>拷贝构造函数</code>被定义为删除的，所以thread对象只可以被移动，不能被拷贝。</p>
+<h2 id="this-thread的命名空间"><a href="#this-thread的命名空间" class="headerlink" title="this_thread的命名空间"></a>this_thread的命名空间</h2><p>this_thread命名空间提供了访问当前线程的一些函数，除了上文提到的<code>get_id</code>外，还有<code>yield</code>、<code>sleep_until</code>和<code>sleep_for</code>。</p>
+<h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h3><p>调用yield函数可以让出当前线程，让操作系统调度同一进程的其他线程。</p>
+<h3 id="sleep-until"><a href="#sleep-until" class="headerlink" title="sleep_until"></a>sleep_until</h3><p><code>sleep_until</code>可以阻塞调用线程直至某个时间点。函数原型为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Clock</span>, <span class="hljs-keyword">class</span> <span class="hljs-title">Duration</span>&gt;</span><br>  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sleep_until</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> chrono::time_point&lt;Clock,Duration&gt;&amp; abs_time)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="sleep-for"><a href="#sleep-for" class="headerlink" title="sleep_for"></a>sleep_for</h3><p><code>sleep_for</code>可以在制定的时间跨度内阻塞线程的执行。函数原型为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Rep</span>, <span class="hljs-keyword">class</span> <span class="hljs-title">Period</span>&gt;</span><br>  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sleep_for</span> <span class="hljs-params">(<span class="hljs-keyword">const</span> chrono::duration&lt;Rep,Period&gt;&amp; rel_time)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="检测硬件并发数"><a href="#检测硬件并发数" class="headerlink" title="检测硬件并发数"></a>检测硬件并发数</h2><p>通过调用thread类的<code>hardware_concurrency静态函数</code>可以获得硬件线程的上下文数量，也就是硬件可以真正同时执行的线程的数目，返回值通常为<code>逻辑CPU的数目</code>。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>《C++并发编程实战》</li>
+<li><a target="_blank" rel="noopener" href="https://www.cplusplus.com/reference/thread/thread/">thread - C++ Reference</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/C/">C++</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/C/">C++</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BA%BF%E7%A8%8B/">线程</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/11/blog/C/GCC%E7%BC%96%E8%AF%91%E5%99%A8%E5%B8%B8%E7%94%A8%E4%BC%98%E5%8C%96%E5%8F%82%E6%95%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GCC编译器常用优化参数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/09/blog/C/C%E8%AF%AD%E8%A8%80%E5%AE%8F%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD/">
+                        <span class="hidden-mobile">C语言宏函数重载</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

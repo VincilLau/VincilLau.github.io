@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Vincil Lau的博客">
+  <meta name="author" content="Vincil Lau">
+  <meta name="keywords" content="">
+  <meta name="description" content="Linux命令学习之lsof简介lsof是一个用于列出进程打开的文件的命令。由于在Linux系统上“一切皆文件”，lsof不仅可以获取进程打开的普通文件的列表，还可以获取进程打开的目录、块特殊文件、字符特殊文件、套接字等各种信息。 lsof的安装12# 在ArchLinux上通过pacman安装。sudo pacman -S lsof  lsof输出的信息我们打开nano文本编辑器，然后执行lso">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令学习之lsof">
+<meta property="og:url" content="http://vincillau.github.io/2021/08/03/blog/Linux/Linux%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E4%B9%8Blsof/index.html">
+<meta property="og:site_name" content="Vincil Lau的博客">
+<meta property="og:description" content="Linux命令学习之lsof简介lsof是一个用于列出进程打开的文件的命令。由于在Linux系统上“一切皆文件”，lsof不仅可以获取进程打开的普通文件的列表，还可以获取进程打开的目录、块特殊文件、字符特殊文件、套接字等各种信息。 lsof的安装12# 在ArchLinux上通过pacman安装。sudo pacman -S lsof  lsof输出的信息我们打开nano文本编辑器，然后执行lso">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-03T06:08:13.000Z">
+<meta property="article:modified_time" content="2021-11-15T06:08:31.726Z">
+<meta property="article:author" content="Vincil Lau">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>Linux命令学习之lsof - Vincil Lau的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"vincillau.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Vincil Lau的博客" type="application/atom+xml">
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Vincil Lau的博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/banner.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux命令学习之lsof">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-03 14:08" pubdate>
+        2021年8月3日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      8 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux命令学习之lsof</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Linux命令学习之lsof"><a href="#Linux命令学习之lsof" class="headerlink" title="Linux命令学习之lsof"></a>Linux命令学习之lsof</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>lsof</code>是一个用于列出进程<code>打开的文件</code>的命令。由于在Linux系统上“一切皆文件”，lsof不仅可以获取进程打开的普通文件的列表，还可以获取进程打开的目录、块特殊文件、字符特殊文件、套接字等各种信息。</p>
+<h2 id="lsof的安装"><a href="#lsof的安装" class="headerlink" title="lsof的安装"></a>lsof的安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> 在ArchLinux上通过pacman安装。</span><br>sudo pacman -S lsof<br></code></pre></td></tr></table></figure>
+
+<h2 id="lsof输出的信息"><a href="#lsof输出的信息" class="headerlink" title="lsof输出的信息"></a>lsof输出的信息</h2><p>我们打开nano文本编辑器，然后执行<code>lsof -c nano</code>，输出如下:</p>
+<blockquote>
+<p>\COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF      NODE NAME<br>nano    19027  lsh  cwd    DIR  259,9       60 134261379 /home/lsh/learn/c<br>nano    19027  lsh  rtd    DIR  259,8      224       128 /<br>nano    19027  lsh  txt    REG  259,8   352840  34708268 /usr/bin/nano<br>nano    19027  lsh  mem    REG  259,8  6198768 102247963 /usr/lib/locale/locale-archive<br>nano    19027  lsh  mem    REG  259,8   154040 100664178 /usr/lib/libpthread-2.33.so<br>nano    19027  lsh  mem    REG  259,8   100096 100665882 /usr/lib/libz.so.1.2.11<br>nano    19027  lsh  mem    REG  259,8    74448 100665990 /usr/lib/libbz2.so.1.0.8<br>nano    19027  lsh  mem    REG  259,8   157456 100665887 /usr/lib/liblzma.so.5.2.5<br>nano    19027  lsh  mem    REG  259,8  2150424 100664130 /usr/lib/libc-2.33.so<br>nano    19027  lsh  mem    REG  259,8   453688 100664712 /usr/lib/libncursesw.so.6.2<br>nano    19027  lsh  mem    REG  259,8   170080 100665234 /usr/lib/libmagic.so.1.0.0<br>nano    19027  lsh  mem    REG  259,8    54380  34753993 /usr/share/locale/zh_CN/LC_MESSAGES/nano.mo<br>nano    19027  lsh  mem    REG  259,8   221480 100664118 /usr/lib/ld-2.33.so<br>nano    19027  lsh    0u   CHR  136,2      0t0         5 /dev/pts/2<br>nano    19027  lsh    1u   CHR  136,2      0t0         5 /dev/pts/2<br>nano    19027  lsh    2u   CHR  136,2      0t0         5 /dev/pts/2<br>nano    19146  lsh  cwd    DIR  259,8     8192 100663426 /etc<br>nano    19146  lsh  rtd    DIR  259,8      224       128 /<br>nano    19146  lsh  txt    REG  259,8   352840  34708268 /usr/bin/nano<br>nano    19146  lsh  mem    REG  259,8  6198768 102247963 /usr/lib/locale/locale-archive<br>nano    19146  lsh  mem    REG  259,8   154040 100664178 /usr/lib/libpthread-2.33.so<br>nano    19146  lsh  mem    REG  259,8   100096 100665882 /usr/lib/libz.so.1.2.11<br>nano    19146  lsh  mem    REG  259,8    74448 100665990 /usr/lib/libbz2.so.1.0.8<br>nano    19146  lsh  mem    REG  259,8   157456 100665887 /usr/lib/liblzma.so.5.2.5<br>nano    19146  lsh  mem    REG  259,8  2150424 100664130 /usr/lib/libc-2.33.so<br>nano    19146  lsh  mem    REG  259,8   453688 100664712 /usr/lib/libncursesw.so.6.2<br>nano    19146  lsh  mem    REG  259,8   170080 100665234 /usr/lib/libmagic.so.1.0.0<br>nano    19146  lsh  mem    REG  259,8    54380  34753993 /usr/share/locale/zh_CN/LC_MESSAGES/nano.mo<br>nano    19146  lsh  mem    REG  259,8   221480 100664118 /usr/lib/ld-2.33.so<br>nano    19146  lsh    0u   CHR  136,2      0t0         5 /dev/pts/2<br>nano    19146  lsh    1u   CHR  136,2      0t0         5 /dev/pts/2<br>nano    19146  lsh    2u   CHR  136,2      0t0         5 /dev/pts/2</p>
+</blockquote>
+<p>可以看到lsof输出许多列的信息，各列信息的含义如下:</p>
+<p>COMMAND: 执行该进程的可执行文件的名称<br>PID: 进程的进程号<br>USER: 进程的所有者<br>FD: 文件的文件描述符，可能有以下取值:</p>
+<blockquote>
+<p>txt: 该文件是程序代码<br>mem: 内存映射文件<br>rtd: 根目录<br>cwd: 当前工作目录<br>打开文件的文件描述符，r表示读取访问，w表示写访问，u表示读写访问。<br>TYPE: 文件的类型<br>DEVICE: 设备号<br>SIZE/OFF: 文件的大小或偏移量<br>NODE: 文件的i-node号<br>NAME: 文件的绝对路径</p>
+</blockquote>
+<h2 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a>常用选项</h2><table>
+<thead>
+<tr>
+<th align="center">选项</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">没有选项</td>
+<td align="center">如果lsof不加任何选项，将列出所有进程的打开文件</td>
+</tr>
+<tr>
+<td align="center">-h</td>
+<td align="center">列出帮助信息</td>
+</tr>
+<tr>
+<td align="center">-c COMMAND</td>
+<td align="center">显示进程名称以COMMAND开头的进程信息</td>
+</tr>
+<tr>
+<td align="center">-g GID</td>
+<td align="center">列出组ID为GID的进程</td>
+</tr>
+<tr>
+<td align="center">-p PID</td>
+<td align="center">列出进程号为PID的进程</td>
+</tr>
+<tr>
+<td align="center">-d FD</td>
+<td align="center">列出文件描述符为FD的文件</td>
+</tr>
+<tr>
+<td align="center">+d DIR</td>
+<td align="center">列出目录被打开的进程</td>
+</tr>
+<tr>
+<td align="center">+D DIR</td>
+<td align="center">递归列出目录下被打开的文件</td>
+</tr>
+<tr>
+<td align="center">-u UID</td>
+<td align="center">列出所有者ID为UID的进程</td>
+</tr>
+</tbody></table>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man8/lsof.8.html">lsof(8) — Linux manual page</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/peida/archive/2013/02/26/2932972.html">每天一个linux命令（51）:lsof命令</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/08/09/blog/C/C%E8%AF%AD%E8%A8%80%E5%AE%8F%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C语言宏函数重载</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/26/blog/Linux/Linux%E7%94%9F%E6%88%90UUID/">
+                        <span class="hidden-mobile">Linux生成UUID</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
